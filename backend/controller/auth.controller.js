@@ -9,7 +9,7 @@ const welcome = (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, mobileNumber, password, email } = req.body;
+    const { firstName, lastName, mobileNumber, password, email } = req.body || {};
 
     const userExist = await findUserByIdOrEmailHelper({ email });
     if (userExist) {
@@ -32,6 +32,7 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({ message: "User register successfully" });
   } catch (error) {
+    console.log("error", error);
     sendInternalServerError({ res, error, functionName: "registerUser" });
   }
 };
@@ -40,7 +41,7 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await findUserByIdOrEmailHelper({ email });
-    if (user) {
+    if (!user) {
       return res.status(400).json({ message: "Enter correct credentials" });
     }
     const isCorrect = await comparePassword(password, user.password);
@@ -48,7 +49,7 @@ const loginUser = async (req, res) => {
 
     const authToken = createJsonToken({ data: user.id });
 
-    res.status(200).json({ message: "Login successfully", authToken });
+    res.status(200).json({ message: "Login successfully", authToken, user });
   } catch (error) {
     sendInternalServerError({ res, error, functionName: "loginUser" });
   }
@@ -57,7 +58,7 @@ const loginUser = async (req, res) => {
 const checkUser = async (req, res) => {
   try {
     const { user } = req;
-    return res.status(200).json({ message: "Authenticate user", user });
+    return res.status(200).json({ message: "Authenticate user" });
   } catch (error) {
     console.log("Error while checking the user ->", error);
   }

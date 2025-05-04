@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const protectRoute = (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
+    // const authHeader = req.headers.authorization;
+    const authHeader = req.get("authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res
