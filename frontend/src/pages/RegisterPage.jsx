@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { RegisterUserApi } from "../Api/AuthServices";
 import { showErrorToast, showSuccessToast } from "../components/common/toastUtils";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
   const [step, setStep] = useState(1);
@@ -50,13 +50,8 @@ const RegisterPage = () => {
     >
       <div className="w-100 d-flex justify-content-end mb-3">
         <span>
-          Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-primary fw-semibold"
-          >
-            Login
-          </a>
+          Already have an account?
+          <NavLink to={"/login"}>Login</NavLink>
         </span>
       </div>
 

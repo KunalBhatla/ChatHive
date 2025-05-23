@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "../stores/authSlice";
+import { logoutUser } from "../stores/authStore/authSlice";
 
 const HomePage = () => {
   const navigate = useNavigate();

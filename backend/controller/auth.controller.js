@@ -49,7 +49,7 @@ const loginUser = async (req, res) => {
 
     const authToken = createJsonToken({ data: user.id });
 
-    res.status(200).json({ message: "Login successfully", authToken, user });
+    res.status(200).json({ user, message: "Login successfully", authToken });
   } catch (error) {
     sendInternalServerError({ res, error, functionName: "loginUser" });
   }
@@ -58,9 +58,10 @@ const loginUser = async (req, res) => {
 const checkUser = async (req, res) => {
   try {
     const { user } = req;
-    return res.status(200).json({ message: "Authenticate user" });
+    return res.status(200).json({ message: "Authenticate user", user });
   } catch (error) {
     console.log("Error while checking the user ->", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

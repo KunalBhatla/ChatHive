@@ -3,17 +3,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../stores/authSlice";
-import { showErrorToast, showSuccessToast } from "../components/common/toastUtils";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { loginUser } from "../stores/authStore/authThunks";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
-  const { isLogging, user, hasError, errorMessage } = useSelector(
-    (state) => state?.auth || {}
-  );
+  const { isLogging } = useSelector((state) => state?.auth || {});
 
   const formik = useFormik({
     initialValues: {
@@ -26,20 +22,7 @@ const LoginPage = () => {
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
-    onSubmit: async (values) => {
-      const response = await dispatch(loginUser({ userCredentials: values }));
-      console.log("response ->", response);
-      console.log("errorMessage ->", errorMessage);
-      console.log("user->", user);
-      console.log("hasError->", hasError);
-      console.log("hasError && user ->", hasError && user);
-      if (!hasError && user) {
-        showSuccessToast("Login successful!");
-        navigate("/", { replace: true });
-      } else {
-        showErrorToast(response?.payload || errorMessage);
-      }
-    },
+    onSubmit: async (values) => dispatch(loginUser({ userCredentials: values })),
   });
 
   return (
@@ -50,13 +33,8 @@ const LoginPage = () => {
       {/* Top nav */}
       <div className="w-100 d-flex justify-content-end mb-3">
         <span>
-          Don’t have an account?{" "}
-          <a
-            href="/register"
-            className="text-primary fw-semibold"
-          >
-            Register
-          </a>
+          Don’t have an account?
+          <NavLink to={"/register"}>Register</NavLink>
         </span>
       </div>
 

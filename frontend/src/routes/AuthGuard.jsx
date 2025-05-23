@@ -1,27 +1,33 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useLocation } from "react-router-dom";
-import { checkForAuthenticateUser } from "../stores/authSlice";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { checkForAuthenticateUser } from "../stores/authStore/authThunks";
 
-const AuthGuard = ({ children, title, checkToken }) => {
-  document.title = title || "ChatHive";
-
-  const { user, isCheckingUser } = useSelector((state) => state?.auth || {});
+const AuthGuard = ({ children, title = "ChatHive", checkToken }) => {
   const dispatch = useDispatch();
   const location = useLocation();
+
+  const { user, token, isCheckingUser } = useSelector((state) => state?.auth || {});
+  document.title = title;
+
+  console.log(location);
 
   useEffect(() => {
     if (checkToken) {
       dispatch(checkForAuthenticateUser());
     }
-  }, [checkToken, location.pathname]);
+  }, [checkToken, dispatch, location.pathname]);
 
-  if ((checkToken && isCheckingUser) || isCheckingUser) {
+  if (isCheckingUser) {
     return <div>Loading...</div>;
   }
 
-  if (!user && checkToken && !isCheckingUser) {
+  if (!token && !user && checkToken) {
     return <Navigate to="/login" />;
+  }
+
+  if (token && !checkToken) {
+    return <Navigate to="/" />;
   }
 
   return children;
