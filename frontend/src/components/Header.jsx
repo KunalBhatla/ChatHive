@@ -32,7 +32,6 @@ const Header = () => {
       }}
     >
       <div className="flex-grow-1">
-        {/* {isOpen ? <span>Sidebar Open</span> : <span>Sidebar Closed</span>} */}
         <button
           onClick={() => dispatch(toggleDrawer())}
           style={{

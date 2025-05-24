@@ -1,10 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { checkForAuthenticateUser, loginUser } from "./authThunks.js";
+import {
+  checkForAuthenticateUser,
+  loginUser,
+  updateCurrentUserDetails,
+} from "./authThunks.js";
 import { showErrorToast, showSuccessToast } from "../../components/common/toastUtils.js";
 
 const initialState = {
   isCheckingUser: false,
   isLogging: false,
+  isUpdating: false,
   user: null,
   hasError: false,
   errorMessage: null,
@@ -25,7 +30,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // builder::loginUser
+    //! builder::loginUser
     builder
       .addCase(loginUser.pending, (state) => {
         state.isLogging = true;
@@ -54,7 +59,7 @@ const authSlice = createSlice({
         state.token = null;
       });
 
-    // builder::checkForAuthenticateUser
+    //! builder::checkForAuthenticateUser
     builder
       .addCase(checkForAuthenticateUser.pending, (state) => {
         state.isCheckingUser = true;
@@ -63,11 +68,31 @@ const authSlice = createSlice({
       })
       .addCase(checkForAuthenticateUser.fulfilled, (state, action) => {
         state.isCheckingUser = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
         state.hasError = false;
       })
       .addCase(checkForAuthenticateUser.rejected, (state, action) => {
         state.isCheckingUser = false;
+        state.hasError = true;
+        state.errorMessage = action.payload || "Login failed";
+        state.token = null;
+        state.user = null;
+      });
+
+    //! builder::updateCurrentUserDetails
+    builder
+      .addCase(updateCurrentUserDetails.pending, (state) => {
+        state.isUpdating = true;
+        state.hasError = false;
+        state.errorMessage = null;
+      })
+      .addCase(updateCurrentUserDetails.fulfilled, (state, action) => {
+        state.isUpdating = false;
+        state.user = action.payload;
+        state.hasError = false;
+      })
+      .addCase(updateCurrentUserDetails.rejected, (state, action) => {
+        state.isUpdating = false;
         state.hasError = true;
         state.errorMessage = action.payload || "Login failed";
         state.token = null;

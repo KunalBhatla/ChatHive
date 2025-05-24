@@ -1,11 +1,21 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { FaHome, FaComments, FaMusic, FaCog, FaBars } from "react-icons/fa";
-import { toggleDrawer } from "../stores/sidebarStore/sidebarSlice";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FaHome, FaComments, FaMusic, FaCog } from "react-icons/fa";
 import profilePlaceholder from "../assets/profilePlaceholder.jpg";
+import { Tooltip } from "react-tooltip";
+
+const COLORS = {
+  background: "#F6EEF7", // Soft Lavender
+  hover: "#E6D5ED",
+  text: "#6A4573",
+  border: "#D6C1E0",
+};
+
+const baseUrl = import.meta.env.VITE_PROFILE_BASE_URL;
 
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isOpen = useSelector((state) => state.sidebar.isOpen);
   const { user } = useSelector((state) => state.auth || {});
   const unreadMessagesCount = 3;
@@ -20,92 +30,140 @@ const Sidebar = () => {
   return (
     <div
       style={{
-        width: isOpen ? "250px" : "70px",
+        width: isOpen ? 240 : 70,
         height: "100vh",
-        backgroundColor: "#F6EEF7",
-        borderRight: "2px solid #6A4573",
+        backgroundColor: COLORS.background,
+        borderRight: `1px solid ${COLORS.border}`,
         transition: "width 0.3s",
         display: "flex",
         flexDirection: "column",
-        alignItems: isOpen ? "flex-start" : "center",
+        alignItems: "center",
         padding: "1rem 0.5rem",
         position: "fixed",
         top: 0,
         left: 0,
         zIndex: 1000,
+        overflowY: "auto",
       }}
     >
-      {/* Toggle Button */}
-      {/* <button
-        onClick={() => dispatch(toggleDrawer())}
-        style={{
-          alignSelf: isOpen ? "flex-end" : "center",
-          marginBottom: "1rem",
-          background: "transparent",
-          border: "none",
-          fontSize: "1.25rem",
-          color: "#6A4573",
-          cursor: "pointer",
-        }}
-        title={isOpen ? "Collapse" : "Expand"}
-      >
-        <FaBars />
-      </button> */}
-
-      {/* User Info */}
+      {/* User Profile */}
       <div
-        className="d-flex align-items-center mb-4"
-        style={{ flexDirection: isOpen ? "row" : "column", gap: "0.5rem" }}
+        className="position-relative w-100 px-2 mb-4"
+        onClick={() => navigate("/update")}
+        data-tooltip-id="edit-profile-tooltip"
+        data-tooltip-content="Edit Profile"
+        style={{
+          cursor: "pointer",
+          borderRadius: "0.5rem",
+          padding: "0.5rem",
+          backgroundColor: "transparent",
+          display: "flex",
+          flexDirection: isOpen ? "column" : "row",
+          alignItems: "center",
+          transition: "background 0.3s",
+          position: "relative",
+          gap: isOpen ? "0.5rem" : 0,
+          justifyContent: isOpen ? "center" : "center",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = COLORS.hover;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = "transparent";
+        }}
       >
         <img
-          src={user?.profilePic || profilePlaceholder}
+          src={user?.profilePic ? `${baseUrl}${user.profilePic}` : profilePlaceholder}
           alt="User"
           className="rounded-circle"
+          data-tooltip-id={!isOpen ? "edit-profile-tooltip" : undefined}
+          data-tooltip-content={!isOpen ? "Edit Profile" : undefined}
           style={{
             width: 50,
             height: 50,
             objectFit: "cover",
-            border: "2px solid #6A4573",
+            border: `2px solid ${COLORS.border}`,
+            cursor: "pointer",
           }}
         />
-        {isOpen && (
-          <div
-            className="fw-bold"
-            style={{ color: "#6A4573" }}
-          >
-            {user?.name || "Guest"}
-          </div>
-        )}
+        {
+          isOpen ? (
+            <div className="d-flex justify-content-between align-items-center w-100 mt-2 px-2">
+              <span
+                className="fw-semibold"
+                style={{
+                  color: COLORS.text,
+                  fontSize: "1rem",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+                title={user?.fullName || "Guest"}
+              >
+                {user?.fullName || "Guest"}
+              </span>
+              <FaCog
+                style={{
+                  color: COLORS.text,
+                  fontSize: "1rem",
+                  opacity: 0.6,
+                }}
+              />
+            </div>
+          ) : null
+          // <FaCog
+          //   style={{
+          //     fontSize: "1rem",
+          //     color: COLORS.text,
+          //     opacity: 0.6,
+          //     marginLeft: "0.5rem",
+          //     flexShrink: 0,
+          //   }}
+          // />
+        }
       </div>
 
-      {/* Navigation */}
+      {/* Navigation List */}
       <nav className="flex-grow-1 w-100">
         {navItems.map(({ to, label, icon, badge }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
-              `d-flex align-items-center gap-2 text-decoration-none mb-3 px-3 py-2 rounded 
-              ${isActive ? "bg-dark-purple text-white" : "text-dark-purple"}`
+              `d-flex align-items-center gap-2 text-decoration-none mb-2 px-3 py-2 rounded fw-medium ${
+                isActive ? "bg-white shadow-sm" : ""
+              }`
             }
             style={{
-              color: "#6A4573",
+              color: COLORS.text,
               justifyContent: isOpen ? "flex-start" : "center",
               position: "relative",
+              padding: isOpen ? "0.5rem 1rem" : "0.5rem",
+              borderRadius: "0.5rem",
+              width: "100%",
+              textAlign: "center",
+              transition: "all 0.3s",
+              whiteSpace: "nowrap",
             }}
-            title={isOpen ? "" : label}
+            title={!isOpen ? label : ""}
           >
-            <span style={{ fontSize: "1.25rem" }}>{icon}</span>
+            <span style={{ fontSize: "1.25rem", flexShrink: 0 }}>{icon}</span>
             {isOpen && <span>{label}</span>}
             {badge > 0 && (
               <span
                 className="badge rounded-pill bg-danger"
                 style={{
-                  fontSize: "0.75rem",
+                  fontSize: "0.7rem",
                   position: "absolute",
-                  right: isOpen ? "10px" : "-8px",
+                  right: isOpen ? 12 : 8,
                   top: "50%",
                   transform: "translateY(-50%)",
+                  minWidth: 18,
+                  height: 18,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "0 6px",
                 }}
               >
                 {badge}

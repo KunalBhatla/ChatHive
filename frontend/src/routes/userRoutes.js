@@ -6,6 +6,7 @@ const HomePageComponent = lazy(() => import("../pages/Homepage"));
 const ChatPageComponent = lazy(() => import("../pages/Chat/ChatPage"));
 const MusicComponent = lazy(() => import("../pages/Music/MusicPage"));
 const SettingsComponent = lazy(() => import("../pages/SettingsPage"));
+const UpdateProfileComponent = lazy(() => import("../pages/UpdateProfile"));
 
 export const userRoutes = [
   {
@@ -42,6 +43,12 @@ export const userRoutes = [
     title: "Settings",
     component: SettingsComponent,
     path: "/settings",
+    checkToken: true,
+  },
+  {
+    title: "Profile Update",
+    component: UpdateProfileComponent,
+    path: "/update",
     checkToken: true,
   },
 ];
