@@ -7,6 +7,8 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await axiosInstance.post("/auth/login", userCredentials);
       if (response?.status === 200) {
+        const { authToken } = response.data;
+        localStorage.setItem("authToken", authToken);
         thunkAPI.dispatch(initializeSocket());
       }
       return response?.data;

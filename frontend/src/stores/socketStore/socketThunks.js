@@ -3,8 +3,11 @@ import { disconnectSocket, setIsConnected } from "./socketSlice";
 
 export const initializeSocket = () => (dispatch, getState) => {
   if (!socket.connected) {
-    socket.connect();
-
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      socket.auth = { authToken: token };
+      socket.connect();
+    }
     socket.on("connect", () => {
       dispatch(setIsConnected(true));
     });
