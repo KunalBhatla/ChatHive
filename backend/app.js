@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const { createServer } = require("http");
 const { initializeSocket } = require("./config/socket");
+const path = require("path");
 
 const app = express();
 
@@ -17,7 +18,7 @@ initializeSocket(httpServer);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.use(express.static())
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 4001;
 

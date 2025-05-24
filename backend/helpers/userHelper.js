@@ -21,7 +21,27 @@ const createUserHelper = async ({ data }) => {
   }
 };
 
+const getAllUsersHelper = async ({ isDeleted = 0, attributes = [] } = {}) => {
+  try {
+    const where = {};
+    if (typeof isDeleted !== "undefined") {
+      where.isDeleted = isDeleted;
+    }
+
+    const options = { where };
+    if (attributes.length) {
+      options.attributes = attributes;
+    }
+
+    return await UserModel.findAll(options);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return null;
+  }
+};
+
 module.exports = {
   findUserByIdOrEmailHelper,
   createUserHelper,
+  getAllUsersHelper,
 };
