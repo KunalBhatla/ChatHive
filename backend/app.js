@@ -1,13 +1,18 @@
+require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
+const { createServer } = require("http");
+const { initializeSocket } = require("./config/socket");
 
 const app = express();
 
 app.use(
-  cors({
+  require("cors")({
     origin: "http://localhost:5173",
   })
 );
+
+const httpServer = createServer(app);
+initializeSocket(httpServer);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,4 +23,4 @@ const PORT = process.env.PORT || 4001;
 
 app.use("/api", require("./routes"));
 
-app.listen(PORT, () => console.log(`Server is running on ${PORT}`));
+httpServer.listen(PORT, () => console.log(`Server is running on ${PORT}`));

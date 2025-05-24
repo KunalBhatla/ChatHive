@@ -2,6 +2,7 @@ const { sendInternalServerError } = require("../helpers/errorHelper");
 const { comparePassword } = require("../helpers/hashHelper");
 const { createJsonToken } = require("../helpers/jsonWebTokenHelper");
 const { findUserByIdOrEmailHelper, createUserHelper } = require("../helpers/userHelper");
+const UserModel = require("../models/UserModel");
 
 const welcome = (req, res) => {
   res.send("hello");
@@ -47,7 +48,7 @@ const loginUser = async (req, res) => {
     const isCorrect = await comparePassword(password, user.password);
     if (!isCorrect) return res.status(400).json({ message: "Enter correct credentials" });
 
-    const authToken = createJsonToken({ data: user.id });
+    const authToken = createJsonToken({ id: user.id });
 
     res.status(200).json({ user, message: "Login successfully", authToken });
   } catch (error) {
@@ -57,11 +58,21 @@ const loginUser = async (req, res) => {
 
 const checkUser = async (req, res) => {
   try {
-    const { user } = req;
-    return res.status(200).json({ message: "Authenticate user", user });
+    const user = await UserModel.findByPk(req.user.id, {
+      attributes: { exclude: ["password"] },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "Authenticated user",
+      user,
+    });
   } catch (error) {
-    console.log("Error while checking the user ->", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error while checking the user ->", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 

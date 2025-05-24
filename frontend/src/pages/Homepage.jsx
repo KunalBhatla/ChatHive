@@ -8,8 +8,9 @@ const HomePage = () => {
   const selector = useSelector((state) => state?.auth || {});
   console.log("selector ->", selector);
   return (
-    <div>
+    <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
       <button
+        className="btn btn-danger mb-3"
         onClick={() => {
           dispatch(logoutUser());
           navigate("/login");
@@ -17,7 +18,7 @@ const HomePage = () => {
       >
         Log out
       </button>
-      <div> HomePage</div>
+      <div className="fs-3 fw-semibold">Home Page</div>
     </div>
   );
 };

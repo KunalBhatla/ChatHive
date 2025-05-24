@@ -6,6 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
+import FullPageLoader from "./components/common/FullPageLoader";
+import { Suspense } from "react";
 
 function App() {
   const routes = [...userRoutes];
@@ -13,28 +15,30 @@ function App() {
 
   return (
     <>
-      <Routes>
-        {routes.map(({ title, component: RenderComponent, path, checkToken }) => {
-          return (
-            <Route
-              key={path}
-              path={path}
-              element={
-                <AuthGuard
-                  title={title}
-                  checkToken={checkToken}
-                >
-                  <RenderComponent />
-                </AuthGuard>
-              }
-            />
-          );
-        })}
-        <Route
-          path="*"
-          element={<div>Chlaja bhosdika</div>}
-        />
-      </Routes>
+      <Suspense fallback={<FullPageLoader />}>
+        <Routes>
+          {routes.map(({ title, component: RenderComponent, path, checkToken }) => {
+            return (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <AuthGuard
+                    title={title}
+                    checkToken={checkToken}
+                  >
+                    <RenderComponent />
+                  </AuthGuard>
+                }
+              />
+            );
+          })}
+          <Route
+            path="*"
+            element={<div>Chlaja bhosdika</div>}
+          />
+        </Routes>
+      </Suspense>
       <ToastContainer
         position="top-right"
         autoClose={3000}
