@@ -1,18 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { io } from "socket.io-client";
 
 const baseURL = "http://localhost:4000";
 // const baseURL = import.meta.env.MODE === "development" ? "http://localhost:4000" : "/";
 
-const socket = io(baseURL, {
-  autoConnect: false,
-  withCredentials: true,
-});
-
 const initialState = {
   users: [],
   isLoading: false,
-  socket: socket,
   messages: [],
   selectedUser: null,
   onlineUsers: [],
@@ -25,22 +18,8 @@ const socketSlice = createSlice({
   name: "socketSlice",
   initialState,
   reducers: {
-    initializeSocket: (state) => {
-      if (!state.socket.connected) {
-        state.socket.connect();
-
-        state.socket.on("connect", () => {
-          state.isConnected = true;
-        });
-
-        state.socket.on("disconnect", () => {
-          state.isConnected = false;
-        });
-
-        state.socket.on("user_disconnected", (userId) => {
-          state.onlineUsers = state.onlineUsers.filter((id) => id !== userId);
-        });
-      }
+    setIsConnected: (state, action) => {
+      state.isConnected = action.payload;
     },
     disconnectSocket: (state) => {
       if (state.isConnected) {
@@ -50,5 +29,5 @@ const socketSlice = createSlice({
   },
 });
 
-export const { initializeSocket, disconnectSocket } = socketSlice.actions;
+export const { setIsConnected, disconnectSocket } = socketSlice.actions;
 export default socketSlice.reducer;

@@ -17,9 +17,6 @@ const AuthGuard = ({ children, title = "ChatHive", checkToken }) => {
   document.title = title;
 
   useEffect(() => {
-    // if (checkToken) {
-    //   dispatch(checkForAuthenticateUser());
-    // }
     if (checkToken && token && !user) {
       dispatch(checkForAuthenticateUser());
     }

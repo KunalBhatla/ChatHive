@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosInstance } from "../../Api";
-import { initializeSocket } from "../socketStore/socketSlice";
-
+import { initializeSocket } from "../socketStore/socketThunks";
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ userCredentials }, thunkAPI) => {
