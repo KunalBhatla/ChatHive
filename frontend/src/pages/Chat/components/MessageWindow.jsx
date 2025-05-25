@@ -16,7 +16,8 @@ const MessageWindow = ({
 }) => {
   const [sendingDisabled, setSendingDisabled] = useState(false);
 
-  // const { handleSelectUser } = useSelector((state) => state.chat);
+  const select = useSelector((state) => state.chat);
+  console.log("select ->", select);
   const dispatch = useDispatch();
 
   const handleSend = (msg) => {
@@ -34,21 +35,17 @@ const MessageWindow = ({
   }
 
   return (
-    <div className="d-flex flex-column flex-grow-1 bg-white">
-      <MessageHeader
-        user={selectedUser}
-        isOnline={isOnline}
-        onClose={() => dispatch(handleSelectUser(null))}
-      />
+    <div
+      className="d-flex flex-column flex-grow-1 bg-white h-100"
+      style={{ minHeight: 0 }}
+    >
+      <MessageHeader onClose={() => dispatch(handleSelectUser(null))} />
       <MessageContent
         messages={messages}
         loading={loadingMessages}
         currentUserId={currentUserId}
       />
-      <MessageFooter
-        onSend={handleSend}
-        disabled={sendingDisabled}
-      />
+      <MessageFooter />
     </div>
   );
 };

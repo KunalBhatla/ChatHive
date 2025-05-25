@@ -11,7 +11,6 @@ const COLORS = {
 const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
   const containerRef = useRef(null);
 
-  // Auto scroll to bottom when messages change
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
@@ -19,11 +18,10 @@ const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
   }, [messages]);
 
   if (loading) {
-    // Show placeholders for 5 messages
     return (
       <div
         ref={containerRef}
-        className="flex-grow-1 overflow-auto px-3 py-2"
+        className="h-100 px-3 py-2 overflow-auto"
         style={{ backgroundColor: COLORS.softLavender }}
       >
         {[...Array(5)].map((_, i) => (
@@ -45,8 +43,12 @@ const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
   return (
     <div
       ref={containerRef}
-      className="flex-grow-1 overflow-auto px-3 py-2"
-      style={{ backgroundColor: COLORS.softLavender }}
+      className="px-3 py-2 overflow-auto"
+      style={{
+        backgroundColor: COLORS.softLavender,
+        flexGrow: 1,
+        minHeight: 0, // essential to prevent growing beyond container and enable scrolling inside flex
+      }}
     >
       {messages.length === 0 && (
         <div

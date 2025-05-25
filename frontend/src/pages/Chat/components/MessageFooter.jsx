@@ -8,13 +8,13 @@ const COLORS = {
   softLavender: "#F6EEF7",
 };
 
-const MessageFooter = ({ onSend, disabled }) => {
+const MessageFooter = () => {
   const [message, setMessage] = useState("");
 
   const handleSend = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-    onSend(message.trim());
+    // onSend(message.trim());
     setMessage("");
   };
 
@@ -36,12 +36,12 @@ const MessageFooter = ({ onSend, disabled }) => {
           color: COLORS.darkPurple,
           fontSize: "1rem",
         }}
-        disabled={disabled}
+        // disabled={disabled}
       />
       <button
         type="submit"
         className="btn"
-        disabled={message.trim() === "" || disabled}
+        // disabled={message.trim() === "" || disabled}
         style={{
           backgroundColor: message.trim() === "" ? COLORS.peach : COLORS.darkPurple,
           color: message.trim() === "" ? COLORS.darkPurple : COLORS.softLavender,

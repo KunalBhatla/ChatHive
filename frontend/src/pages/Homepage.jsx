@@ -6,7 +6,6 @@ const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const selector = useSelector((state) => state?.auth || {});
-  console.log("selector ->", selector);
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
       <button

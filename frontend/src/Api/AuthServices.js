@@ -1,7 +1,5 @@
 import { axiosInstance } from ".";
 
-import axiosInstance from "../utils/axiosInstance"; // adjust path as needed
-
 export const RegisterUserApi = async (data) => {
   if (!data || typeof data !== "object") {
     throw new Error("Invalid registration data");
