@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Skeleton from "react-loading-skeleton";
+import NoMessagesPlaceholder from "./NoMessagesPlaceholder";
 
 const COLORS = {
   lavender: "#C8A2C8",
@@ -21,8 +22,12 @@ const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
     return (
       <div
         ref={containerRef}
-        className="h-100 px-3 py-2 overflow-auto"
-        style={{ backgroundColor: COLORS.softLavender }}
+        className="px-3 py-2 overflow-auto"
+        style={{
+          backgroundColor: COLORS.softLavender,
+          flex: "1 1 0", // This is the key fix - allows growth and shrinking
+          minHeight: 0,
+        }}
       >
         {[...Array(5)].map((_, i) => (
           <div
@@ -46,18 +51,11 @@ const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
       className="px-3 py-2 overflow-auto"
       style={{
         backgroundColor: COLORS.softLavender,
-        flexGrow: 1,
+        flex: "1 1 0", // This replaces flexGrow: 1 and is more explicit
         minHeight: 0, // essential to prevent growing beyond container and enable scrolling inside flex
       }}
     >
-      {messages.length === 0 && (
-        <div
-          className="text-center text-muted mt-5"
-          style={{ fontStyle: "italic", color: COLORS.darkPurple, opacity: 0.5 }}
-        >
-          No messages yet
-        </div>
-      )}
+      {messages.length === 0 && <NoMessagesPlaceholder />}
       {messages.map(({ id, senderId, text, timestamp }) => {
         const isSender = senderId === currentUserId;
         return (

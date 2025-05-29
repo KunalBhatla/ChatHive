@@ -26,9 +26,13 @@ const LoginPage = () => {
   });
 
   return (
+    // <div
+    //   className="d-flex flex-column justify-content-between align-items-center bg-light"
+    //   style={{ minHeight: "100vh", padding: "1rem" }}
+    // >
     <div
       className="d-flex flex-column justify-content-between align-items-center bg-light"
-      style={{ minHeight: "100vh", padding: "1rem" }}
+      style={{ height: "100%" }}
     >
       {/* Top nav */}
       <div className="w-100 d-flex justify-content-end mb-3">

@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { checkForAuthenticateUser } from "../stores/authStore/authThunks";
 import FullPageLoader from "../components/common/FullPageLoader";
-import { toggleDrawer } from "../stores/sidebarStore/sidebarSlice";
 import SidebarComponent from "../components/SidebarComponent";
 import Header from "../components/Header";
 
@@ -33,39 +32,39 @@ const AuthGuard = ({ children, title = "ChatHive", checkToken }) => {
   if (token && !checkToken) {
     return <Navigate to="/" />;
   }
+
+  // Sidebar width dynamically based on toggle state
+  const sidebarWidth = isOpen ? 250 : 60;
+
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      {/* Sidebar on the left */}
+    <div className="d-flex vh-100">
+      {/* Sidebar */}
       {checkToken && (
         <div
+          className=" border-end"
           style={{
-            width: isOpen ? "250px" : "60px",
+            width: `${sidebarWidth}px`,
             transition: "width 0.3s",
+            // backgroundColor: "#f6eef7", // Soft lavender
+            // zIndex: 1000,
+            overflow: "hidden",
             backgroundColor: "#C8A2C8",
             overflow: "hidden",
+            flexShrink: 0,
           }}
         >
           <SidebarComponent />
         </div>
       )}
 
-      {/* Right content area */}
-      <div style={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
-        {/* Header fixed height */}
-        <div>
-          <Header />
-        </div>
+      {/* Main content area */}
+      <div
+        className="flex-grow-1 d-flex flex-column"
+        style={{ minWidth: 0 }}
+      >
+        <Header />
 
-        <div
-          style={{
-            height: "calc(100vh - 60px)",
-            width: `calc(100vw - ${isOpen ? 250 : 60}px)`,
-            overflow: "hidden",
-            padding: "5px",
-          }}
-        >
-          {children}
-        </div>
+        <div className="p-2 flex-grow-1 overflow-auto">{children}</div>
       </div>
     </div>
   );

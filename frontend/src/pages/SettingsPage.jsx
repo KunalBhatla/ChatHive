@@ -1,6 +1,6 @@
 const Settings = () => {
   return (
-    <div className="vh-100 bg-light">
+    <div style={{ height: "100%" }}>
       <div>Settings</div>
     </div>
   );

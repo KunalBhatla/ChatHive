@@ -15,15 +15,17 @@ const MessageWindow = ({
   currentUserId,
 }) => {
   const [sendingDisabled, setSendingDisabled] = useState(false);
-
   const select = useSelector((state) => state.chat);
   console.log("select ->", select);
   const dispatch = useDispatch();
 
-  const handleSend = (msg) => {
+  const handleSend = async (msg) => {
     setSendingDisabled(true);
-    onSendMessage(msg);
-    setSendingDisabled(false);
+    try {
+      await onSendMessage(msg);
+    } finally {
+      setSendingDisabled(false);
+    }
   };
 
   if (!selectedUser) {
@@ -36,16 +38,27 @@ const MessageWindow = ({
 
   return (
     <div
-      className="d-flex flex-column flex-grow-1 bg-white h-100"
-      style={{ minHeight: 0 }}
+      className="d-flex flex-column flex-grow-1 bg-white"
+      style={
+        {
+          // height: "100%",
+          // minHeight: 0,
+          // maxHeight: "100%", // Prevent overflow
+        }
+      }
     >
       <MessageHeader onClose={() => dispatch(handleSelectUser(null))} />
+
       <MessageContent
         messages={messages}
         loading={loadingMessages}
         currentUserId={currentUserId}
       />
-      <MessageFooter />
+
+      <MessageFooter
+        onSendMessage={handleSend}
+        disabled={sendingDisabled}
+      />
     </div>
   );
 };

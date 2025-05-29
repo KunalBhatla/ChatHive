@@ -11,14 +11,16 @@ const ChatPage = () => {
 
   useEffect(() => {
     dispatch(fetchAllChatUsersThunk());
-
     return () => {
       dispatch(resetChatInitialStates());
     };
   }, []);
 
   return (
-    <div className="d-flex vh-100 bg-light">
+    <div
+      className="d-flex bg-light"
+      style={{ height: "100%" }}
+    >
       <UsersSidebar />
       <MessageWindow
         selectedUser={selector.selectedUser}
@@ -32,15 +34,5 @@ const ChatPage = () => {
     </div>
   );
 };
+
 export default ChatPage;
-{
-  /* <MessageWindow
-        selectedUser={null}
-        isOnline={true}
-        messages={messages}
-        onClose={handleClose}
-        onSendMessage={handleSendMessage}
-        loadingMessages={loadingMessages}
-        currentUserId={currentUserId}
-      /> */
-}

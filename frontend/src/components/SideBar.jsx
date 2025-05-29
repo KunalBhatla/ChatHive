@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaHome, FaComments, FaMusic, FaCog } from "react-icons/fa";
-import profilePlaceholder from "../assets/profilePlaceholder.jpg";
 import { Tooltip } from "react-tooltip";
+import profilePlaceholder from "../assets/profilePlaceholder.jpg";
 
 const COLORS = {
   background: "#F6EEF7", // Soft Lavender
@@ -46,24 +46,22 @@ const Sidebar = () => {
         overflowY: "auto",
       }}
     >
-      {/* User Profile */}
+      {/* Profile Section */}
       <div
         className="position-relative w-100 px-2 mb-4"
         onClick={() => navigate("/update")}
-        data-tooltip-id="edit-profile-tooltip"
-        data-tooltip-content="Edit Profile"
+        data-tooltip-id={!isOpen ? "profile-tooltip" : undefined}
+        data-tooltip-content={!isOpen ? "Edit Profile" : undefined}
         style={{
           cursor: "pointer",
           borderRadius: "0.5rem",
           padding: "0.5rem",
-          backgroundColor: "transparent",
           display: "flex",
           flexDirection: isOpen ? "column" : "row",
           alignItems: "center",
+          justifyContent: "center",
           transition: "background 0.3s",
-          position: "relative",
-          gap: isOpen ? "0.5rem" : 0,
-          justifyContent: isOpen ? "center" : "center",
+          gap: isOpen ? "0.5rem" : "0",
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = COLORS.hover;
@@ -76,54 +74,40 @@ const Sidebar = () => {
           src={user?.profilePic ? `${baseUrl}${user.profilePic}` : profilePlaceholder}
           alt="User"
           className="rounded-circle"
-          data-tooltip-id={!isOpen ? "edit-profile-tooltip" : undefined}
-          data-tooltip-content={!isOpen ? "Edit Profile" : undefined}
           style={{
             width: 50,
             height: 50,
             objectFit: "cover",
             border: `2px solid ${COLORS.border}`,
-            cursor: "pointer",
           }}
         />
-        {
-          isOpen ? (
-            <div className="d-flex justify-content-between align-items-center w-100 mt-2 px-2">
-              <span
-                className="fw-semibold"
-                style={{
-                  color: COLORS.text,
-                  fontSize: "1rem",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-                title={user?.fullName || "Guest"}
-              >
-                {user?.fullName || "Guest"}
-              </span>
-              <FaCog
-                style={{
-                  color: COLORS.text,
-                  fontSize: "1rem",
-                  opacity: 0.6,
-                }}
-              />
-            </div>
-          ) : null
-          // <FaCog
-          //   style={{
-          //     fontSize: "1rem",
-          //     color: COLORS.text,
-          //     opacity: 0.6,
-          //     marginLeft: "0.5rem",
-          //     flexShrink: 0,
-          //   }}
-          // />
-        }
+        {isOpen ? (
+          <div className="d-flex justify-content-between align-items-center w-100 mt-2 px-2">
+            <span
+              className="fw-semibold"
+              style={{
+                color: COLORS.text,
+                fontSize: "1rem",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+              title={user?.fullName || "Guest"}
+            >
+              {user?.fullName || "Guest"}
+            </span>
+            <FaCog
+              style={{
+                color: COLORS.text,
+                fontSize: "1rem",
+                opacity: 0.6,
+              }}
+            />
+          </div>
+        ) : null}
       </div>
 
-      {/* Navigation List */}
+      {/* Navigation Items */}
       <nav className="flex-grow-1 w-100">
         {navItems.map(({ to, label, icon, badge }) => (
           <NavLink
@@ -145,11 +129,12 @@ const Sidebar = () => {
               transition: "all 0.3s",
               whiteSpace: "nowrap",
             }}
-            title={!isOpen ? label : ""}
+            data-tooltip-id={!isOpen ? "sidebar-tooltip" : undefined}
+            data-tooltip-content={!isOpen ? label : undefined}
           >
             <span style={{ fontSize: "1.25rem", flexShrink: 0 }}>{icon}</span>
             {isOpen && <span>{label}</span>}
-            {badge > 0 && (
+            {badge !== undefined && badge > 0 && (
               <span
                 className="badge rounded-pill bg-danger"
                 style={{
@@ -172,6 +157,16 @@ const Sidebar = () => {
           </NavLink>
         ))}
       </nav>
+
+      {/* Tooltip Definitions */}
+      <Tooltip
+        id="sidebar-tooltip"
+        place="right"
+      />
+      <Tooltip
+        id="profile-tooltip"
+        place="right"
+      />
     </div>
   );
 };

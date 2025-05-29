@@ -1,6 +1,6 @@
 const MusicPage = () => {
   return (
-    <div className="vh-100 bg-light">
+    <div style={{ height: "100%" }}>
       <div>MusicPage</div>
     </div>
   );

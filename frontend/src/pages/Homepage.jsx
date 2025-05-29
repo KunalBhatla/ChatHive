@@ -7,7 +7,7 @@ const HomePage = () => {
   const dispatch = useDispatch();
   const selector = useSelector((state) => state?.auth || {});
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center vh-100 bg-light">
+    <div style={{ height: "100%" }}>
       <button
         className="btn btn-danger mb-3"
         onClick={() => {
