@@ -3,8 +3,10 @@ const express = require("express");
 const { createServer } = require("http");
 const { initializeSocket } = require("./config/socket");
 const path = require("path");
+const setupAssociations = require("./models/associations");
 
 const app = express();
+setupAssociations();
 
 app.use(
   require("cors")({
@@ -23,5 +25,4 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 const PORT = process.env.PORT || 4001;
 
 app.use("/api", require("./routes"));
-
 httpServer.listen(PORT, () => console.log(`Server is running on ${PORT}`));

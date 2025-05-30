@@ -25,7 +25,7 @@ const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
         className="px-3 py-2 overflow-auto"
         style={{
           backgroundColor: COLORS.softLavender,
-          flex: "1 1 0", // This is the key fix - allows growth and shrinking
+          flex: "1 1 0",
           minHeight: 0,
         }}
       >

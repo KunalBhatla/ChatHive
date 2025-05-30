@@ -5,27 +5,17 @@ import MessageFooter from "./MessageFooter";
 import NoSelectedUser from "./NoSelectedUser";
 import { useDispatch, useSelector } from "react-redux";
 import { handleSelectUser } from "../../../stores/chatStore/chatSlice";
+import { sendMessageThunk } from "../../../stores/chatStore/chatThunks";
 
-const MessageWindow = ({
-  selectedUser,
-  isOnline,
-  messages,
-  onSendMessage,
-  loadingMessages,
-  currentUserId,
-}) => {
+const MessageWindow = () => {
   const [sendingDisabled, setSendingDisabled] = useState(false);
-  const select = useSelector((state) => state.chat);
-  console.log("select ->", select);
+  const { isLoadingMessages, isSendingMessage, messages, selectedUser } = useSelector(
+    (state) => state.chat
+  );
   const dispatch = useDispatch();
 
   const handleSend = async (msg) => {
-    setSendingDisabled(true);
-    try {
-      await onSendMessage(msg);
-    } finally {
-      setSendingDisabled(false);
-    }
+    await dispatch(sendMessageThunk(msg));
   };
 
   if (!selectedUser) {
@@ -51,13 +41,13 @@ const MessageWindow = ({
 
       <MessageContent
         messages={messages}
-        loading={loadingMessages}
-        currentUserId={currentUserId}
+        loading={isLoadingMessages}
+        currentUserId={2}
       />
 
       <MessageFooter
         onSendMessage={handleSend}
-        disabled={sendingDisabled}
+        disabled={isSendingMessage}
       />
     </div>
   );
