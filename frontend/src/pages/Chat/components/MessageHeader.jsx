@@ -1,5 +1,4 @@
 import { FaUserCircle, FaTimes } from "react-icons/fa";
-import Skeleton from "react-loading-skeleton";
 import { useSelector } from "react-redux";
 
 const COLORS = {
@@ -12,7 +11,10 @@ const COLORS = {
 const baseUrl = import.meta.env.VITE_PROFILE_BASE_URL;
 
 const MessageHeader = ({ onClose }) => {
-  const { selectedUser } = useSelector((state) => state.chat);
+  const { selectedUser, onlineUsers } = useSelector((state) => ({
+    selectedUser: state.chat.selectedUser,
+    onlineUsers: state.socket.onlineUsers,
+  }));
 
   return (
     <div
@@ -20,16 +22,38 @@ const MessageHeader = ({ onClose }) => {
       style={{ backgroundColor: COLORS.lavender, color: COLORS.softLavender }}
     >
       <div className="d-flex align-items-center gap-2">
-        {selectedUser.profilePic ? (
-          <img
-            src={`${baseUrl}${selectedUser.profilePic}`}
-            alt={`${selectedUser.fullName} avatar`}
-            className="rounded-circle"
-            style={{ width: 40, height: 40, objectFit: "cover" }}
+        <div
+          style={{ position: "relative" }}
+          className="me-1 flex-shrink-0"
+        >
+          {selectedUser.profilePic ? (
+            <img
+              src={`${baseUrl}${selectedUser.profilePic}`}
+              alt={`${selectedUser.fullName} avatar`}
+              className="rounded-circle"
+              style={{ width: 40, height: 40, objectFit: "cover" }}
+            />
+          ) : (
+            <FaUserCircle size={40} />
+          )}
+
+          {/* Online/offline dot */}
+          <span
+            className="status-dot"
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              backgroundColor: onlineUsers?.includes(selectedUser?.id)
+                ? "#4CAF50"
+                : "#A9A9A9",
+              border: "2px solid white",
+            }}
           />
-        ) : (
-          <FaUserCircle size={40} />
-        )}
+        </div>
         <div className="d-flex flex-column">
           <span
             className="fw-semibold"
