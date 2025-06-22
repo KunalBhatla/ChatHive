@@ -32,8 +32,6 @@ const initializeSocket = (server) => {
     // console.log("Bitch connected ->", socket.id);
     const userId = socket.userId;
 
-    // console.log("✅ User connected ->", userId, "| socket ID:", socket.id);
-
     userSockets.set(userId, socket.id);
 
     //Emit for the online users

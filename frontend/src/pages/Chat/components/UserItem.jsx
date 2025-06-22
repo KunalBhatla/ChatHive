@@ -61,6 +61,19 @@ const UserItem = ({ user, onClick, isActive, isCurrentUser, isOnline }) => {
         >
           {isCurrentUser ? "(You)" : `${user.fullName}`}
         </div>
+
+        {user.lastMessage && (
+          <div
+            className="text-truncate small mt-1"
+            style={{
+              color: isActive ? "#F6EEF7" : "#6A4573",
+              opacity: 0.85,
+              fontSize: "0.875rem",
+            }}
+          >
+            {user.lastMessage}
+          </div>
+        )}
       </div>
 
       <style jsx>{`

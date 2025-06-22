@@ -13,6 +13,16 @@ function setupAssociations() {
     as: "participant",
   });
 
+  ParticipantsModel.belongsTo(UserModel, {
+    foreignKey: "user1Id",
+    as: "user1",
+  });
+
+  ParticipantsModel.belongsTo(UserModel, {
+    foreignKey: "user2Id",
+    as: "user2",
+  });
+
   UserModel.hasMany(ChatModel, {
     foreignKey: "senderId",
     as: "sentMessages",
@@ -21,6 +31,16 @@ function setupAssociations() {
   ChatModel.belongsTo(UserModel, {
     foreignKey: "senderId",
     as: "sender",
+  });
+
+  UserModel.hasMany(ParticipantsModel, {
+    foreignKey: "user1Id",
+    // as: "participants1",
+  });
+
+  UserModel.hasMany(ParticipantsModel, {
+    foreignKey: "user2Id",
+    // as: "participants2",
   });
 }
 

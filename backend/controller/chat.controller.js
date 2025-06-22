@@ -5,12 +5,18 @@ const {
   fetchParticipantMessagesHelper,
 } = require("../helpers/chatHelper");
 const { sendInternalServerError } = require("../helpers/errorHelper");
-const { getAllUsersHelper } = require("../helpers/userHelper");
+const {
+  getAllUsersHelper,
+  getAllUsersWithLastMessageHelper,
+} = require("../helpers/userHelper");
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await getAllUsersHelper({
-      attributes: ["id", "fullName", "firstName", "lastName", "profilePic"],
+    // const users = await getAllUsersHelper({
+    //   attributes: ["id", "fullName", "firstName", "lastName", "profilePic"],
+    // });
+    const users = await getAllUsersWithLastMessageHelper({
+      currentUserId: req.user.id,
     });
     if (!users) {
       return res.status(400).json({ message: "Internal server error" });

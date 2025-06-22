@@ -11,9 +11,10 @@ const COLORS = {
 const baseUrl = import.meta.env.VITE_PROFILE_BASE_URL;
 
 const MessageHeader = ({ onClose }) => {
-  const { selectedUser, onlineUsers } = useSelector((state) => ({
+  const { selectedUser, onlineUsers, currentLoggedInUser } = useSelector((state) => ({
     selectedUser: state.chat.selectedUser,
     onlineUsers: state.socket.onlineUsers,
+    currentLoggedInUser: state?.auth?.user,
   }));
 
   return (
@@ -59,7 +60,9 @@ const MessageHeader = ({ onClose }) => {
             className="fw-semibold"
             style={{ fontSize: "1.1rem", color: COLORS.softLavender }}
           >
-            {selectedUser?.fullName || "Unknown User"}
+            {currentLoggedInUser?.id === selectedUser?.id
+              ? "(You)"
+              : selectedUser?.fullName || "Unknown User"}
           </span>
 
           <div
