@@ -72,6 +72,7 @@ const chatSlice = createSlice({
     builder
       .addCase(fetchParticipantsMessagesThunk.pending, (state) => {
         state.isLoadingMessages = true;
+        state.messages = [];
       })
 
       .addCase(fetchParticipantsMessagesThunk.fulfilled, (state, action) => {

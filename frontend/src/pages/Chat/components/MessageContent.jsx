@@ -56,7 +56,7 @@ const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
       }}
     >
       {messages.length === 0 && <NoMessagesPlaceholder />}
-      {messages.map(({ id, senderId, text, timestamp }) => {
+      {messages.map(({ id, senderId, textContent, createdDateFormatted }) => {
         const isSender = senderId === currentUserId;
         return (
           <div
@@ -79,16 +79,13 @@ const MessageContent = ({ messages = [], loading = false, currentUserId }) => {
                 fontSize: "0.95rem",
               }}
             >
-              {text}
+              {textContent}
             </div>
             <small
               className="mt-1 text-muted"
               style={{ fontSize: "0.75rem", opacity: 0.7 }}
             >
-              {new Date(timestamp).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {createdDateFormatted}
             </small>
           </div>
         );

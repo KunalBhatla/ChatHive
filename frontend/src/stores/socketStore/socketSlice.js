@@ -1,8 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const baseURL = "http://localhost:4000";
-// const baseURL = import.meta.env.MODE === "development" ? "http://localhost:4000" : "/";
-
 const initialState = {
   users: [],
   isLoading: false,
@@ -21,6 +18,9 @@ const socketSlice = createSlice({
     setIsConnected: (state, action) => {
       state.isConnected = action.payload;
     },
+    updateOnlineUsers: (state, action) => {
+      state.onlineUsers = action.payload;
+    },
     disconnectSocket: (state) => {
       if (state.isConnected) {
         state.isConnected = false;
@@ -29,5 +29,6 @@ const socketSlice = createSlice({
   },
 });
 
-export const { setIsConnected, disconnectSocket } = socketSlice.actions;
+export const { setIsConnected, disconnectSocket, updateOnlineUsers } =
+  socketSlice.actions;
 export default socketSlice.reducer;

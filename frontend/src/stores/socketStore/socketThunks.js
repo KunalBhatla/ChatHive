@@ -1,13 +1,15 @@
 import { socket } from "../../lib/socket";
-import { disconnectSocket, setIsConnected } from "./socketSlice";
+import { disconnectSocket, setIsConnected, updateOnlineUsers } from "./socketSlice";
 
 export const initializeSocket = () => (dispatch, getState) => {
   if (!socket.connected) {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      socket.auth = { authToken: token };
-      socket.connect();
-    }
+    const authToken = localStorage.getItem("authToken");
+
+    if (!authToken) return;
+
+    socket.auth = { authToken };
+    socket.connect();
+
     socket.on("connect", () => {
       dispatch(setIsConnected(true));
     });
@@ -16,9 +18,10 @@ export const initializeSocket = () => (dispatch, getState) => {
       dispatch(setIsConnected(false));
     });
 
-    // socket.on("user_disconnected", (userId) => {
-    //   dispatch(removeOnlineUser(userId));
-    // });
+    socket.on("getOnlineUsers", (onlineUsers) => {
+      console.log("onlineUsers ->", onlineUsers);
+      dispatch(updateOnlineUsers(onlineUsers));
+    });
   }
 };
 

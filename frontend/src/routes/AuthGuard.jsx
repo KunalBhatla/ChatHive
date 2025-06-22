@@ -5,6 +5,7 @@ import { checkForAuthenticateUser } from "../stores/authStore/authThunks";
 import FullPageLoader from "../components/common/FullPageLoader";
 import SidebarComponent from "../components/SidebarComponent";
 import Header from "../components/Header";
+import { initializeSocket } from "../stores/socketStore/socketThunks";
 
 const AuthGuard = ({ children, title = "ChatHive", checkToken }) => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const AuthGuard = ({ children, title = "ChatHive", checkToken }) => {
   useEffect(() => {
     if (checkToken && token && !user) {
       dispatch(checkForAuthenticateUser());
+      dispatch(initializeSocket());
     }
   }, [checkToken, dispatch, token, user, location.pathname]);
 

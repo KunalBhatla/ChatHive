@@ -13,7 +13,6 @@ const ChatPage = () => {
   const chatSelector = useSelector((state) => state.chat);
   const { selectedUser } = chatSelector;
 
-  console.log(selectedUser);
   useEffect(() => {
     dispatch(fetchAllChatUsersThunk());
     return () => {

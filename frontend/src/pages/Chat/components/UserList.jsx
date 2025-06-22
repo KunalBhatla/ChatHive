@@ -1,10 +1,12 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleSelectUser } from "../../../stores/chatStore/chatSlice";
 import UserItem from "./UserItem";
 import UserListSkeleton from "./UserListSkeleton";
 
 const UserList = ({ users, isLoading, selectedUserId }) => {
   const dispatch = useDispatch();
+  const { user: currentLoggedInUser } = useSelector((state) => state?.auth);
+  const { onlineUsers } = useSelector((state) => state.socket);
 
   return (
     <div
@@ -38,6 +40,8 @@ const UserList = ({ users, isLoading, selectedUserId }) => {
             user={user}
             isActive={user.id === selectedUserId}
             onClick={() => dispatch(handleSelectUser(user))}
+            isCurrentUser={user.id === currentLoggedInUser?.id}
+            isOnline={onlineUsers?.includes(user?.id || false)}
           />
         ))
       )}

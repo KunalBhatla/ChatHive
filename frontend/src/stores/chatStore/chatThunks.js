@@ -20,6 +20,30 @@ export const fetchAllChatUsersThunk = createAsyncThunk(
   }
 );
 
+export const fetchParticipantsMessagesThunk = createAsyncThunk(
+  "chat/messages",
+  async (_, thunkAPI) => {
+    try {
+      const {
+        chat: { selectedUser },
+      } = thunkAPI.getState();
+      const id = selectedUser?.id;
+      if (!selectedUser) {
+        return thunkAPI.rejectWithValue("No user selected");
+      }
+
+      const response = await fetchParticipantsMessagesService({ id });
+
+      return response;
+    } catch (error) {
+      console.log("Error in fetchParticipantsMessagesThunk", error.message);
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message || "Something went wrong...!"
+      );
+    }
+  }
+);
+
 export const sendMessageThunk = createAsyncThunk("chat/send", async (data, thunkAPI) => {
   try {
     const {
@@ -35,9 +59,8 @@ export const sendMessageThunk = createAsyncThunk("chat/send", async (data, thunk
     };
 
     const response = await sendMessageService(payload);
-
     showSuccessToast(response?.message || "Message send successfully");
-
+    thunkAPI.dispatch(fetchParticipantsMessagesThunk());
     return response;
   } catch (error) {
     console.log("Error in sendMessageThunk", error.message);
@@ -46,29 +69,3 @@ export const sendMessageThunk = createAsyncThunk("chat/send", async (data, thunk
     );
   }
 });
-
-export const fetchParticipantsMessagesThunk = createAsyncThunk(
-  "chat/messages",
-  async (_, thunkAPI) => {
-    try {
-      const {
-        chat: { selectedUser },
-      } = thunkAPI.getState();
-      const id = selectedUser?.id;
-      if (!selectedUser) {
-        return thunkAPI.rejectWithValue("No user selected");
-      }
-
-      const response = await fetchParticipantsMessagesService({ id });
-
-      console.log(response, "That should be return");
-
-      return response;
-    } catch (error) {
-      console.log("Error in fetchParticipantsMessagesThunk", error.message);
-      return thunkAPI.rejectWithValue(
-        error?.response?.data?.message || "Something went wrong...!"
-      );
-    }
-  }
-);

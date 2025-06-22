@@ -3,7 +3,7 @@ import classNames from "classnames";
 
 const baseUrl = import.meta.env.VITE_PROFILE_BASE_URL;
 
-const UserItem = ({ user, onClick, isActive }) => {
+const UserItem = ({ user, onClick, isActive, isCurrentUser, isOnline }) => {
   return (
     <button
       type="button"
@@ -33,22 +33,40 @@ const UserItem = ({ user, onClick, isActive }) => {
           aria-hidden="true"
         />
       )}
+      {/* <div className="flex-grow-1">
+        <div
+          className="fw-semibold text-truncate"
+          style={{ fontSize: "1rem", color: isActive ? "#F6EEF7" : "#6A4573" }}
+        >
+          {isCurrentUser ? "(You)" : `${user.fullName}`}
+        </div>
+      </div> */}
       <div className="flex-grow-1">
         <div
           className="fw-semibold text-truncate"
           style={{ fontSize: "1rem", color: isActive ? "#F6EEF7" : "#6A4573" }}
         >
-          {user.fullName}
+          {isCurrentUser ? "(You)" : `${user.fullName}`}
         </div>
-        {/* <div
-          className="small"
-          style={{
-            color: isActive ? "#FFDDE0" : "#6A4573",
-            opacity: 0.85,
-          }}
-        >
-          {user.status || "Available"}
-        </div> */}
+
+        <div className="d-flex align-items-center gap-2 mt-1">
+          <span
+            className="status-dot"
+            style={{
+              backgroundColor: isOnline ? "#4CAF50" : "#A9A9A9",
+            }}
+          ></span>
+          <span
+            className="status-label small"
+            style={{
+              color: isOnline ? "#4CAF50" : "#A9A9A9",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+            }}
+          >
+            {isOnline ? "Online" : "Offline"}
+          </span>
+        </div>
       </div>
 
       <style jsx>{`
@@ -80,6 +98,12 @@ const UserItem = ({ user, onClick, isActive }) => {
     transition: background-color 0.3s ease, color 0.3s ease;
     border-width: 1.5px;
   }
+    status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
   button:focus-visible {
     outline: 3px solid #6a4573;
     outline-offset: 2px;

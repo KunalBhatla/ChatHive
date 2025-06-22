@@ -8,10 +8,11 @@ import { handleSelectUser } from "../../../stores/chatStore/chatSlice";
 import { sendMessageThunk } from "../../../stores/chatStore/chatThunks";
 
 const MessageWindow = () => {
-  const [sendingDisabled, setSendingDisabled] = useState(false);
-  const { isLoadingMessages, isSendingMessage, messages, selectedUser } = useSelector(
-    (state) => state.chat
-  );
+  const {
+    chat: { isLoadingMessages, isSendingMessage, messages, selectedUser },
+    auth: { user },
+  } = useSelector((state) => state);
+
   const dispatch = useDispatch();
 
   const handleSend = async (msg) => {
@@ -27,22 +28,13 @@ const MessageWindow = () => {
   }
 
   return (
-    <div
-      className="d-flex flex-column flex-grow-1 bg-white"
-      style={
-        {
-          // height: "100%",
-          // minHeight: 0,
-          // maxHeight: "100%", // Prevent overflow
-        }
-      }
-    >
+    <div className="d-flex flex-column flex-grow-1 bg-white">
       <MessageHeader onClose={() => dispatch(handleSelectUser(null))} />
 
       <MessageContent
         messages={messages}
         loading={isLoadingMessages}
-        currentUserId={2}
+        currentUserId={user?.id}
       />
 
       <MessageFooter
