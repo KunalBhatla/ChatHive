@@ -47,7 +47,7 @@ export const fetchParticipantsMessagesThunk = createAsyncThunk(
 export const sendMessageThunk = createAsyncThunk("chat/send", async (data, thunkAPI) => {
   try {
     const {
-      chat: { selectedUser },
+      chat: { selectedUser, messages },
     } = thunkAPI.getState();
     const id = selectedUser?.id;
     if (!selectedUser) {
@@ -60,7 +60,9 @@ export const sendMessageThunk = createAsyncThunk("chat/send", async (data, thunk
 
     const response = await sendMessageService(payload);
     showSuccessToast(response?.message || "Message send successfully");
-    thunkAPI.dispatch(fetchParticipantsMessagesThunk());
+
+    // messages.push({});
+    // thunkAPI.dispatch(fetchParticipantsMessagesThunk());
     return response;
   } catch (error) {
     console.log("Error in sendMessageThunk", error.message);

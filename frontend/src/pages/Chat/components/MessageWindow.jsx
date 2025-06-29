@@ -1,4 +1,3 @@
-import { useState } from "react";
 import MessageHeader from "./MessageHeader";
 import MessageContent from "./MessageContent";
 import MessageFooter from "./MessageFooter";
@@ -8,10 +7,11 @@ import { handleSelectUser } from "../../../stores/chatStore/chatSlice";
 import { sendMessageThunk } from "../../../stores/chatStore/chatThunks";
 
 const MessageWindow = () => {
-  const {
-    chat: { isLoadingMessages, isSendingMessage, messages, selectedUser },
-    auth: { user },
-  } = useSelector((state) => state);
+  const chat = useSelector((state) => state.chat);
+  const auth = useSelector((state) => state.auth);
+
+  const { isLoadingMessages, isSendingMessage, messages, selectedUser } = chat;
+  const { user } = auth;
 
   const dispatch = useDispatch();
 

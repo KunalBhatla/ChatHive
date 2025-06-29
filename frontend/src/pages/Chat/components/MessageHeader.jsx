@@ -11,11 +11,9 @@ const COLORS = {
 const baseUrl = import.meta.env.VITE_PROFILE_BASE_URL;
 
 const MessageHeader = ({ onClose }) => {
-  const { selectedUser, onlineUsers, currentLoggedInUser } = useSelector((state) => ({
-    selectedUser: state.chat.selectedUser,
-    onlineUsers: state.socket.onlineUsers,
-    currentLoggedInUser: state?.auth?.user,
-  }));
+  const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const onlineUsers = useSelector((state) => state.socket.onlineUsers);
+  const currentLoggedInUser = useSelector((state) => state.auth?.user);
 
   return (
     <div

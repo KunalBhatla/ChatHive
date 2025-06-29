@@ -62,7 +62,7 @@ const UserItem = ({ user, onClick, isActive, isCurrentUser, isOnline }) => {
           {isCurrentUser ? "(You)" : `${user.fullName}`}
         </div>
 
-        {user.lastMessage && (
+        {/* {user.lastMessage && (
           <div
             className="text-truncate small mt-1"
             style={{
@@ -73,7 +73,7 @@ const UserItem = ({ user, onClick, isActive, isCurrentUser, isOnline }) => {
           >
             {user.lastMessage}
           </div>
-        )}
+        )} */}
       </div>
 
       <style jsx>{`

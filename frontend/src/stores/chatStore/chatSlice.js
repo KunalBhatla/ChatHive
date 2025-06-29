@@ -15,6 +15,7 @@ const initialState = {
   isErrorFetchingMessages: null,
   users: [],
   messages: [],
+  totalNotificationCount: 0,
 };
 
 const chatSlice = createSlice({
@@ -32,6 +33,10 @@ const chatSlice = createSlice({
       state.isErrorFetchingUsers = null;
       state.users = [];
       state.messages = [];
+    },
+    pushNewMessageInList: (state, action) => {
+      console.log("action ->", action);
+      state.messages.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -88,5 +93,6 @@ const chatSlice = createSlice({
   },
 });
 
-export const { handleSelectUser, resetChatInitialStates } = chatSlice.actions;
+export const { handleSelectUser, resetChatInitialStates, pushNewMessageInList } =
+  chatSlice.actions;
 export default chatSlice.reducer;

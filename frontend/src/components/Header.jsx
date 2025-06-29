@@ -8,10 +8,8 @@ import { disconnectSocketThunk } from "../stores/socketStore/socketThunks";
 // Header.js
 const Header = () => {
   const dispatch = useDispatch();
-  const { isOpen, token } = useSelector((state) => ({
-    isOpen: state.sidebar.isOpen,
-    token: state.auth?.token,
-  }));
+  const isOpen = useSelector((state) => state.sidebar.isOpen);
+  const token = useSelector((state) => state.auth?.token);
   const navigate = useNavigate();
 
   const handleLogout = () => {

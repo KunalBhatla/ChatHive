@@ -9,6 +9,7 @@ const {
   getAllUsersHelper,
   getAllUsersWithLastMessageHelper,
 } = require("../helpers/userHelper");
+const { getIOWithOnlineUsers } = require("../config/socket");
 
 const getAllUsers = async (req, res) => {
   try {
@@ -32,6 +33,11 @@ const sendMessageToReceiver = async (req, res) => {
   try {
     const { id: senderId } = req.user;
     const { receiverId, content } = req.body;
+    const { io, onlineUsers } = getIOWithOnlineUsers();
+
+    const receiverSocketId = onlineUsers.get(Number(receiverId));
+    const isReceiverOnline = !!receiverSocketId;
+
     let participantsDetail = await checkParticipantsHelper({
       senderId,
       receiverId: Number(receiverId),
@@ -50,11 +56,28 @@ const sendMessageToReceiver = async (req, res) => {
       senderId,
       participantId,
       textContent: content,
+      status: isReceiverOnline ? "delivered" : "sent",
     });
 
     if (!createdMessage) {
-      return res.status({ message: "Error while sending the message" });
+      return res.status(500).json({ message: "Error while sending the message" });
     }
+
+    const messagePayload = {
+      createdDateFormatted: createdMessage.createdDateFormatted,
+      mediaUrl: createdMessage.dataValues.mediaUrl,
+      participantId: createdMessage.dataValues.participantId,
+      isDeleted: createdMessage.dataValues.isDeleted,
+      id: createdMessage.dataValues.id,
+      status: createdMessage.dataValues.status,
+      textContent: createdMessage.dataValues.textContent,
+      senderId,
+    };
+
+    io.to([receiverSocketId, onlineUsers.get(Number(senderId))]).emit(
+      "newChatMessage",
+      messagePayload
+    );
 
     return res.status(200).json({ message: "Message send successfully" });
   } catch (error) {

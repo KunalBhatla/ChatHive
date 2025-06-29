@@ -45,7 +45,7 @@ const getAllUsersHelper = async ({ isDeleted = 0, attributes = [] } = {}) => {
 
 const getAllUsersWithLastMessageHelper = async ({ currentUserId } = {}) => {
   try {
-    const user = await UserModel.findAll({
+    const users = await UserModel.findAll({
       where: {
         isDeleted: 0,
       },
@@ -55,8 +55,18 @@ const getAllUsersWithLastMessageHelper = async ({ currentUserId } = {}) => {
           model: ParticipantsModel,
           where: {
             [Op.or]: [
-              { user1Id: Sequelize.col("UserModel.id"), user2Id: currentUserId },
-              { user1Id: currentUserId, user2Id: Sequelize.col("UserModel.id") },
+              {
+                [Op.and]: [
+                  { user1Id: Sequelize.col("UserModel.id") },
+                  { user2Id: currentUserId },
+                ],
+              },
+              {
+                [Op.and]: [
+                  { user1Id: currentUserId },
+                  { user2Id: Sequelize.col("UserModel.id") },
+                ],
+              },
             ],
           },
           include: [
@@ -73,8 +83,8 @@ const getAllUsersWithLastMessageHelper = async ({ currentUserId } = {}) => {
       ],
     });
 
-    const result = Array.isArray(user)
-      ? user.map((item = {}) => {
+    const result = Array.isArray(users)
+      ? users.map((item = {}) => {
           const {
             id = null,
             firstName = "",
