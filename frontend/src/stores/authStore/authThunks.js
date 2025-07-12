@@ -3,13 +3,18 @@ import { axiosInstance } from "../../Api";
 import { initializeSocket } from "../socketStore/socketThunks";
 import { updateCurrentUserDetailsService } from "../../Api/UserServices";
 import { showErrorToast, showSuccessToast } from "../../components/common/toastUtils";
+import { syncNotificationCount } from "../chatStore/chatSlice";
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ userCredentials }, thunkAPI) => {
     try {
       const response = await axiosInstance.post("/auth/login", userCredentials);
       if (response?.status === 200) {
-        const { authToken } = response.data;
+        const { authToken, user } = response.data;
+        const { notificationCount } = user || {};
+        thunkAPI.dispatch(
+          syncNotificationCount({ setNotificationValue: notificationCount })
+        );
         localStorage.setItem("authToken", authToken);
         thunkAPI.dispatch(initializeSocket());
       }

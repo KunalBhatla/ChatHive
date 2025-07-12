@@ -18,11 +18,12 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const isOpen = useSelector((state) => state.sidebar.isOpen);
   const { user } = useSelector((state) => state.auth || {});
-  const unreadMessagesCount = 3;
+  const chatSelector = useSelector((state) => state.chat);
+  const { totalNotificationCount } = chatSelector;
 
   const navItems = [
     { to: "/", label: "Home", icon: <FaHome /> },
-    { to: "/chats", label: "Chats", icon: <FaComments />, badge: unreadMessagesCount },
+    { to: "/chats", label: "Chats", icon: <FaComments />, badge: totalNotificationCount },
     { to: "/music", label: "Music", icon: <FaMusic /> },
     { to: "/settings", label: "Settings", icon: <FaCog /> },
   ];

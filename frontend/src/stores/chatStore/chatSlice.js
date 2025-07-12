@@ -34,8 +34,21 @@ const chatSlice = createSlice({
       state.users = [];
       state.messages = [];
     },
+    syncNotificationCount: (state, action) => {
+      const { setNotificationValue = null, type = null, by = 1 } = action.payload || {};
+
+      const count = Number(by) || 1;
+
+      if (type == "increment" || type?.toLowerCase().startsWith("incr")) {
+        state.totalNotificationCount += count;
+      } else if (type == "decrement" || type?.toLowerCase().startsWith("decr")) {
+        state.totalNotificationCount = Math.max(0, state.totalNotificationCount - count);
+      } else if (typeof setNotificationValue === "number") {
+        state.totalNotificationCount = setNotificationValue;
+      }
+    },
+
     pushNewMessageInList: (state, action) => {
-      console.log("action ->", action);
       state.messages.push(action.payload);
     },
   },
@@ -93,6 +106,10 @@ const chatSlice = createSlice({
   },
 });
 
-export const { handleSelectUser, resetChatInitialStates, pushNewMessageInList } =
-  chatSlice.actions;
+export const {
+  handleSelectUser,
+  resetChatInitialStates,
+  pushNewMessageInList,
+  syncNotificationCount,
+} = chatSlice.actions;
 export default chatSlice.reducer;

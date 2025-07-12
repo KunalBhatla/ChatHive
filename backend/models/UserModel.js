@@ -46,6 +46,11 @@ const UserModel = sequelize.define(
       type: DataTypes.STRING,
       defaultValue: null,
     },
+    notificationCount: {
+      type: DataTypes.INTEGER(4),
+      defaultValue: 0,
+      allowNull: false,
+    },
     isDeleted: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

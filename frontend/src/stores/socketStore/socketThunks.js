@@ -19,7 +19,6 @@ export const initializeSocket = () => (dispatch, getState) => {
     });
 
     socket.on("getOnlineUsers", (onlineUsers) => {
-      console.log("onlineUsers ->", onlineUsers);
       dispatch(updateOnlineUsers(onlineUsers));
     });
   }

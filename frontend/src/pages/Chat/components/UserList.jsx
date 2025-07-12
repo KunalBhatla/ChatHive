@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { handleSelectUser } from "../../../stores/chatStore/chatSlice";
+import {
+  handleSelectUser,
+  syncNotificationCount,
+} from "../../../stores/chatStore/chatSlice";
 import UserItem from "./UserItem";
 import UserListSkeleton from "./UserListSkeleton";
 
@@ -39,7 +42,18 @@ const UserList = ({ users, isLoading, selectedUserId }) => {
             key={user.id}
             user={user}
             isActive={user.id === selectedUserId}
-            onClick={() => dispatch(handleSelectUser(user))}
+            onClick={() => {
+              console.log("user.unreadNotificationCount", user.unreadNotificationCount);
+              if (user.unreadNotificationCount) {
+                dispatch(
+                  syncNotificationCount({
+                    type: "decrement",
+                    by: user.unreadNotificationCount,
+                  })
+                );
+              }
+              dispatch(handleSelectUser(user));
+            }}
             isCurrentUser={user.id === currentLoggedInUser?.id}
             isOnline={onlineUsers?.includes(user?.id || false)}
           />

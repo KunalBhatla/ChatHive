@@ -8,17 +8,21 @@ const { sendInternalServerError } = require("../helpers/errorHelper");
 const {
   getAllUsersHelper,
   getAllUsersWithLastMessageHelper,
+  updateNotificationByUserIdHelper,
 } = require("../helpers/userHelper");
 const { getIOWithOnlineUsers } = require("../config/socket");
 
 const getAllUsers = async (req, res) => {
   try {
-    // const users = await getAllUsersHelper({
-    //   attributes: ["id", "fullName", "firstName", "lastName", "profilePic"],
-    // });
-    const users = await getAllUsersWithLastMessageHelper({
-      currentUserId: req.user.id,
+    const users = await getAllUsersHelper({
+      attributes: ["id", "fullName", "firstName", "lastName", "profilePic"],
+      withUnreadCount: true,
+      withLastMessage: true,
+      req,
     });
+    // const users = await getAllUsersWithLastMessageHelper({
+    //   currentUserId: req.user.id,
+    // });
     if (!users) {
       return res.status(400).json({ message: "Internal server error" });
     }
@@ -73,6 +77,8 @@ const sendMessageToReceiver = async (req, res) => {
       textContent: createdMessage.dataValues.textContent,
       senderId,
     };
+
+    await updateNotificationByUserIdHelper({ userId: Number(receiverId) });
 
     io.to([receiverSocketId, onlineUsers.get(Number(senderId))]).emit(
       "newChatMessage",
